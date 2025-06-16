@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Revenue_Recognition_System.Model.DTOs;
 
 namespace Revenue_Recognition_System.Model;
 
@@ -33,5 +35,15 @@ public class Customer
             throw new BadRequestException("KRS or PESEL is required");
         if (KRS is not null && PESEL is not null)
             throw new BadRequestException("Customer can have either KRS or PESEL, not both");
+    }
+
+    public void Update([FromBody] UpdateClientDTO customerDTO)
+    {
+        if (!this.Active)
+            throw new ConflictException("cannot update deleted customers");
+        this.Name = customerDTO.Name ?? this.Name;
+        this.Email = customerDTO.Email ?? this.Email;
+        this.Adress = customerDTO.Adress ?? this.Adress;
+        this.Phone = customerDTO.Phone ?? this.Phone;
     }
 }

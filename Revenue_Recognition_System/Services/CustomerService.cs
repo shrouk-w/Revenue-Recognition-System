@@ -47,4 +47,18 @@ public class CustomerService : ICustomerService
         
         await _context.SaveChangesAsync(token);
     }
+
+    public async Task<Customer> UpdateCustomerAsync(int id, UpdateClientDTO customer, CancellationToken token)
+    {
+        if(id<=0)
+            throw new BadRequestException("Invalid id");
+        
+        var toEdit = await _context.Customers.FindAsync(id, token);
+        
+        toEdit.Update(customer);
+        
+        await _context.SaveChangesAsync(token);
+        
+        return toEdit;
+    }
 }

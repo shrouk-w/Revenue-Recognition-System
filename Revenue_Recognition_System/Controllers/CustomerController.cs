@@ -29,5 +29,13 @@ public class CustomerController : ControllerBase
         await _customerService.DeleteCustomerAsync(id, token);
         return NoContent();
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCustomerAsync([FromRoute] int id, [FromBody] UpdateClientDTO customer,
+        CancellationToken token)
+    {
+        var response = await _customerService.UpdateCustomerAsync(id, customer, token);
+        return Ok(response);
+    }
     
 }
