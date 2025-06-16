@@ -1,3 +1,9 @@
+using kolokwiumA.Middlewares;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Revenue_Recognition_System.DAL;
+using Swashbuckle.AspNetCore.SwaggerUI;
+
 namespace Revenue_Recognition_System;
 
 public class Program
@@ -5,26 +11,66 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        
+        string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-        // Add services to the container.
         builder.Services.AddAuthorization();
+        builder.Services.AddControllers();
+        
+        builder.Services.AddDbContext<RRSDbContext>(opt =>
+        {
+            opt.UseSqlServer(connectionString)
+                .EnableSensitiveDataLogging()
+                .LogTo(Console.WriteLine, LogLevel.Information);
+        });
 
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
+        //builder.Services.AddScoped<ICustomerService, CustomerService>();
+        
+        
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Version = "v1",
+                Title = "PurchasesApi",
+                Description = "api for managing purchases",
+                Contact = new OpenApiContact
+                {
+                    Name="Api Support",
+                    Email="apiSupport@gmail.com",
+                    Url = new Uri("https://github.com/apiSupport")
+                },
+                License = new OpenApiLicense
+                {
+                    Name = "MIT License",
+                    Url = new Uri("https://opensource.org/licenses/MIT")
+                }
+            });
+        });
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
+        app.UseGlobalExceptionHandling();
+        
+        app.UseSwagger();
+        
+        app.UseSwaggerUI(c =>
         {
-            app.MapOpenApi();
-        }
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "webApi");
+            
+            c.DocExpansion(DocExpansion.List);
+            c.DefaultModelExpandDepth(0);
+            c.DisplayRequestDuration();
+            c.EnableFilter();
+            
+        });
+        
 
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
-        
+        app.MapControllers();
 
         app.Run();
     }
