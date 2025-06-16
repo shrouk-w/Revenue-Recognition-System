@@ -1,7 +1,8 @@
-using kolokwiumA.Middlewares;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Revenue_Recognition_System.DAL;
+using Revenue_Recognition_System.Services;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Revenue_Recognition_System;
@@ -24,7 +25,7 @@ public class Program
                 .LogTo(Console.WriteLine, LogLevel.Information);
         });
 
-        //builder.Services.AddScoped<ICustomerService, CustomerService>();
+        builder.Services.AddScoped<ICustomerService, CustomerService>();
         
         
         builder.Services.AddSwaggerGen(c =>

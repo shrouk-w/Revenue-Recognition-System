@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 
-namespace kolokwiumA.Middlewares;
 
 public class GlobalExceptionHandlingMiddleware
 {
