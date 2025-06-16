@@ -42,7 +42,6 @@ public class GlobalExceptionHandlingMiddleware
         {
             status = "Error",
             message = exception.Message,
-            stackTrace = exception.StackTrace
         };
         
         var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
