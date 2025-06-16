@@ -34,7 +34,7 @@ public class CustomerService : ICustomerService
         
         await _context.SaveChangesAsync(token);
 
-        return customerToAdd.ClientId;
+        return customerToAdd.CustomerId;
     }
 
     public async Task DeleteCustomerAsync(int id, CancellationToken token)

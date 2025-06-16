@@ -7,7 +7,7 @@ namespace Revenue_Recognition_System.Model;
 public class Customer
 {
     [Key]
-    public int ClientId { get; set; }
+    public int CustomerId { get; set; }
     [MaxLength(100)]
     public string Name { get; set; }
     [EmailAddress]
@@ -26,6 +26,8 @@ public class Customer
     {
         if (!this.Active)
             throw new BadRequestException("this Customer is already deleted");
+        if (KRS is not null)
+            throw new BadRequestException("firms cannot be deleted");
         this.Active = false;
     }
 
